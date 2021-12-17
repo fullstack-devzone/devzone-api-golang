@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
@@ -22,20 +23,16 @@ func main() {
 	app := initApp(cfg)
 	router := setupRoutes(app)
 
-	port := os.Getenv("APP_PORT")
-	if port == "" {
-		port = "8080"
-		log.Printf("defaulting to port %s", port)
-	}
+	port := fmt.Sprintf(":%d", cfg.AppPort)
 	srv := &http.Server{
 		Handler:        router,
-		Addr:           ":" + port,
+		Addr:           port,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	log.Printf("listening on port %s", port)
+	log.Printf("listening on port %d", cfg.AppPort)
 	if err := srv.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
@@ -47,8 +44,12 @@ func initApp(cfg config.Config) *App {
 }
 
 func setupRoutes(app *App) *mux.Router {
-	router := mux.NewRouter()
-	router.HandleFunc("/api/links", app.LinkController.GetAll)
+	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc("/api/links", app.LinkController.GetAll).Methods(http.MethodGet)
+	router.HandleFunc("/api/links/{id:[0-9]+}", app.LinkController.GetById).Methods(http.MethodGet)
+	router.HandleFunc("/api/links", app.LinkController.Create).Methods(http.MethodPost)
+	router.HandleFunc("/api/links/{id:[0-9]+}", app.LinkController.Update).Methods(http.MethodPut)
+	router.HandleFunc("/api/links/{id:[0-9]+}", app.LinkController.Delete).Methods(http.MethodDelete)
 	return router
 }
 
@@ -78,6 +79,13 @@ func initConfig() config.Config {
 			log.Warningf("Couldn't load environment variables from .env file")
 		}
 	}
+	port := os.Getenv("APP_PORT")
+	if port == "" {
+		port = "8080"
+		log.Printf("defaulting to port %s", port)
+	}
+
+	AppPort, _ := strconv.Atoi(port)
 	DbHost := os.Getenv("APP_DB_HOST")
 	DbPort, _ := strconv.Atoi(os.Getenv("APP_DB_PORT"))
 	DbUserName := os.Getenv("APP_DB_USERNAME")
@@ -85,6 +93,7 @@ func initConfig() config.Config {
 	DbDatabase := os.Getenv("APP_DB_NAME")
 	DbRunMigrations, _ := strconv.ParseBool(os.Getenv("APP_DB_RUN_MIGRATIONS"))
 	return config.Config{
+		AppPort:         AppPort,
 		DbHost:          DbHost,
 		DbPort:          DbPort,
 		DbUserName:      DbUserName,
