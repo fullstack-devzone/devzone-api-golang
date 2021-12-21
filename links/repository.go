@@ -18,9 +18,9 @@ type linkRepo struct {
 	db *sql.DB
 }
 
-func NewLinkRepo(db *sql.DB) *LinkRepository {
+func NewLinkRepo(db *sql.DB) LinkRepository {
 	var repo LinkRepository = linkRepo{db}
-	return &repo
+	return repo
 }
 
 func (b linkRepo) GetLinks() ([]models.Link, error) {
