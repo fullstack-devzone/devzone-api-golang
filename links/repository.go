@@ -6,15 +6,24 @@ import (
 	"github.com/sivaprasadreddy/devzone-api-golang/models"
 )
 
+type LinkRepository interface {
+	GetLinks() ([]models.Link, error)
+	GetLinkById(linkId int) (models.Link, error)
+	CreateLink(link models.Link) (models.Link, error)
+	UpdateLink(link models.Link) (models.Link, error)
+	DeleteLink(linkId int) error
+}
+
 type linkRepo struct {
 	db *sql.DB
 }
 
-func NewLinkRepo(db *sql.DB) *linkRepo {
-	return &linkRepo{db}
+func NewLinkRepo(db *sql.DB) *LinkRepository {
+	var repo LinkRepository = linkRepo{db}
+	return &repo
 }
 
-func (b *linkRepo) GetLinks() ([]models.Link, error) {
+func (b linkRepo) GetLinks() ([]models.Link, error) {
 	rows, err := b.db.Query(`SELECT id, title, url, created_at FROM links`)
 	if err != nil {
 		return nil, err
@@ -33,7 +42,7 @@ func (b *linkRepo) GetLinks() ([]models.Link, error) {
 	return links, nil
 }
 
-func (b *linkRepo) GetLinkById(linkId int) (models.Link, error) {
+func (b linkRepo) GetLinkById(linkId int) (models.Link, error) {
 	log.Infof("Fetching link with id=%d", linkId)
 	var link = models.Link{CreatedBy: models.User{}}
 	b.db.QueryRow(`select id, title, url, created_by, created_at, updated_at FROM links where id=$1`, linkId).Scan(
@@ -42,7 +51,7 @@ func (b *linkRepo) GetLinkById(linkId int) (models.Link, error) {
 	return link, nil
 }
 
-func (b *linkRepo) CreateLink(link models.Link) (models.Link, error) {
+func (b linkRepo) CreateLink(link models.Link) (models.Link, error) {
 	var lastInsertID int
 	err := b.db.QueryRow("insert into links(title, url, created_by, created_at) values($1, $2, $3,$4) RETURNING id",
 		link.Title, link.Url, link.CreatedBy.Id, link.CreatedDate).Scan(&lastInsertID)
@@ -54,7 +63,7 @@ func (b *linkRepo) CreateLink(link models.Link) (models.Link, error) {
 	return link, nil
 }
 
-func (b *linkRepo) UpdateLink(link models.Link) (models.Link, error) {
+func (b linkRepo) UpdateLink(link models.Link) (models.Link, error) {
 	_, err := b.db.Exec("update links set title = $1, url=$2, updated_at=$3 where id=$4",
 		link.Title, link.Url, link.UpdatedDate, link.Id)
 	if err != nil {
@@ -63,7 +72,7 @@ func (b *linkRepo) UpdateLink(link models.Link) (models.Link, error) {
 	return link, nil
 }
 
-func (b *linkRepo) DeleteLink(linkId int) error {
+func (b linkRepo) DeleteLink(linkId int) error {
 	deleteStmt := `delete from links where id=$1`
 	_, err := b.db.Exec(deleteStmt, linkId)
 	return err

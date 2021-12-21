@@ -5,10 +5,10 @@ import (
 )
 
 type linkService struct {
-	repo *linkRepo
+	repo LinkRepository
 }
 
-func NewLinkService(repo *linkRepo) *linkService {
+func NewLinkService(repo LinkRepository) *linkService {
 	return &linkService{repo: repo}
 }
 

@@ -12,7 +12,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-func GetDb(config config.Config) *sql.DB {
+func GetDb(config config.AppConfig) *sql.DB {
 	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		config.DbHost, config.DbPort, config.DbUserName, config.DbPassword, config.DbDatabase)
 	db, err := sql.Open("postgres", connStr)
@@ -25,8 +25,8 @@ func GetDb(config config.Config) *sql.DB {
 	return db
 }
 
-func runMigrations(config config.Config) {
-	sourceURL := "file://database/migrations"
+func runMigrations(config config.AppConfig) {
+	sourceURL := config.DbMigrationsLocation
 	databaseURL := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
 		config.DbUserName, config.DbPassword, config.DbHost, config.DbPort, config.DbDatabase)
 	// log.Printf("DB Migration URL: %s\n", databaseURL)
