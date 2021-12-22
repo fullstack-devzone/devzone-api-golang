@@ -3,16 +3,21 @@ module github.com/sivaprasadreddy/devzone-api-golang
 go 1.17
 
 require (
+	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/golang-migrate/migrate/v4 v4.15.1
 	github.com/gorilla/mux v1.8.0
 	github.com/joho/godotenv v1.4.0
 	github.com/lib/pq v1.10.4
+	github.com/sirupsen/logrus v1.8.1
+	github.com/stretchr/testify v1.7.0
+	github.com/testcontainers/testcontainers-go v0.12.0
 )
 
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/Microsoft/go-winio v0.5.1 // indirect
 	github.com/Microsoft/hcsshim v0.9.1 // indirect
+	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/containerd/cgroups v1.0.2 // indirect
 	github.com/containerd/containerd v1.5.8 // indirect
@@ -27,6 +32,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
+	github.com/kr/pretty v0.3.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/moby/sys/mount v0.3.0 // indirect
 	github.com/moby/sys/mountinfo v0.5.0 // indirect
@@ -37,10 +43,7 @@ require (
 	github.com/opencontainers/runc v1.0.3 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/sirupsen/logrus v1.8.1 // indirect
-	github.com/stretchr/objx v0.3.0 // indirect
-	github.com/stretchr/testify v1.7.0 // indirect
-	github.com/testcontainers/testcontainers-go v0.12.0 // indirect
+	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect

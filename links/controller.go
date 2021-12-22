@@ -50,22 +50,16 @@ func (b *LinkController) Create(w http.ResponseWriter, r *http.Request) {
 	log.Info("create link")
 	contentType := r.Header.Get("Content-Type")
 	if contentType != "" && contentType != "application/json" {
-		//http.Error(w, "Content-Type header is not application/json", http.StatusUnsupportedMediaType)
 		helpers.RespondWithError(w, http.StatusUnsupportedMediaType, "Content-Type header is not application/json")
 		return
 	}
-	var link models.Link
-	err := json.NewDecoder(r.Body).Decode(&link)
+	var createLink CreateLinkModel
+	err := json.NewDecoder(r.Body).Decode(&createLink)
 	if err != nil {
 		helpers.RespondWithError(w, http.StatusBadRequest, "Unable to parse request body. Error: "+err.Error())
 		return
 	}
-	//TODO; Get Login User Id
-	user := models.User{Id: 1}
-
-	link.CreatedBy = user
-	link.CreatedDate = time.Now()
-	link, err = b.service.CreateLink(link)
+	link, err := b.service.CreateLink(createLink)
 	if err != nil {
 		log.Errorf("Error while create link %v", err)
 		helpers.RespondWithError(w, http.StatusInternalServerError, "Unable to create link")
