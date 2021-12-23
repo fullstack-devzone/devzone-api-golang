@@ -8,7 +8,7 @@ RUN go mod download
 # Copy local code to the container image.
 COPY . ./
 # Build the Go app
-RUN GOOS=linux go build -v -o server
+RUN GO111MODULE=on GOOS=linux CGO_ENABLED=0 go build -v -o server
 
 
 ######## Start a new stage from scratch #######

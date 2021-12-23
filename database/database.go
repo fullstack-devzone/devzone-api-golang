@@ -29,7 +29,8 @@ func runMigrations(config config.AppConfig) {
 	sourceURL := config.DbMigrationsLocation
 	databaseURL := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
 		config.DbUserName, config.DbPassword, config.DbHost, config.DbPort, config.DbDatabase)
-	// log.Printf("DB Migration URL: %s\n", databaseURL)
+	//log.Printf("DB Migration sourceURL: %s\n", sourceURL)
+	//log.Printf("DB Migration URL: %s\n", databaseURL)
 	m, err := migrate.New(sourceURL, databaseURL)
 	if err != nil {
 		log.Fatalf("Database migration error: %v", err)
