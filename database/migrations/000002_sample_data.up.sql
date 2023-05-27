@@ -18,25 +18,11 @@ INSERT INTO user_role (user_id, role_id) VALUES
 (3, 2)
 ;
 
-INSERT INTO tags(name) VALUES
-('java'),
-('spring'),
-('spring-boot'),
-('spring-cloud'),
-('jpa'),
-('hibernate'),
-('junit'),
-('devops'),
-('maven'),
-('gradle'),
-('security')
-;
-
-insert into links(url, title, created_by, created_at) values
-('https://linuxize.com/post/how-to-remove-docker-images-containers-volumes-and-networks/','How To Remove Docker Containers, Images, Volumes, and Networks',1,CURRENT_TIMESTAMP),
-('https://reflectoring.io/unit-testing-spring-boot/','All You Need To Know About Unit Testing with Spring Boot',1,CURRENT_TIMESTAMP),
-('https://blog.jooq.org/2014/06/25/flyway-and-jooq-for-unbeatable-sql-development-productivity/','Flyway and jOOQ for Unbeatable SQL Development Productivity',1,CURRENT_TIMESTAMP),
-('https://www.marcobehler.com/guides/java-microservices-a-practical-guide','Java Microservices: A Practical Guide',1,CURRENT_TIMESTAMP),
-('https://sivalabs.in/2020/02/spring-boot-integration-testing-using-testcontainers-starter/','SpringBoot Integration Testing using TestContainers Starter',1,CURRENT_TIMESTAMP),
-('https://medium.com/faun/continuous-integration-of-java-project-with-github-actions-7a8a0e8246ef','Continuous Integration of Java project with GitHub Actions',1,CURRENT_TIMESTAMP)
+insert into posts(url, title, content, created_by, created_at) values
+('https://linuxize.com/post/how-to-remove-docker-images-containers-volumes-and-networks/','How To Remove Docker Containers, Images, Volumes, and Networks','How To Remove Docker Containers, Images, Volumes, and Networks',1,CURRENT_TIMESTAMP),
+('https://reflectoring.io/unit-testing-spring-boot/','All You Need To Know About Unit Testing with Spring Boot','All You Need To Know About Unit Testing with Spring Boot',1,CURRENT_TIMESTAMP),
+('https://blog.jooq.org/2014/06/25/flyway-and-jooq-for-unbeatable-sql-development-productivity/','Flyway and jOOQ for Unbeatable SQL Development Productivity','Flyway and jOOQ for Unbeatable SQL Development Productivity',1,CURRENT_TIMESTAMP),
+('https://www.marcobehler.com/guides/java-microservices-a-practical-guide','Java Microservices: A Practical Guide','Java Microservices: A Practical Guide',1,CURRENT_TIMESTAMP),
+('https://sivalabs.in/2020/02/spring-boot-integration-testing-using-testcontainers-starter/','SpringBoot Integration Testing using TestContainers Starter','SpringBoot Integration Testing using TestContainers Starter',1,CURRENT_TIMESTAMP),
+('https://medium.com/faun/continuous-integration-of-java-project-with-github-actions-7a8a0e8246ef','Continuous Integration of Java project with GitHub Actions','Continuous Integration of Java project with GitHub Actions',1,CURRENT_TIMESTAMP)
 ;

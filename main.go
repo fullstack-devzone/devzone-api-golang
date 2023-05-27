@@ -2,15 +2,17 @@ package main
 
 import (
 	"fmt"
-	log "github.com/sirupsen/logrus"
-	"github.com/sivaprasadreddy/devzone-api-golang/config"
 	"net/http"
 	"time"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/sivaprasadreddy/devzone-api-golang/cmd"
+	"github.com/sivaprasadreddy/devzone-api-golang/config"
 )
 
 func main() {
-	cfg := config.GetConfig()
-	app := NewApp(cfg)
+	cfg := config.GetConfig(".env")
+	app := cmd.NewApp(cfg)
 
 	port := fmt.Sprintf(":%d", cfg.AppPort)
 	srv := &http.Server{
