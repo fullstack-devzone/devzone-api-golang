@@ -7,7 +7,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/sivaprasadreddy/devzone-api-golang/cmd"
-	"github.com/sivaprasadreddy/devzone-api-golang/config"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/config"
 )
 
 func main() {

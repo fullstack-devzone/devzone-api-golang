@@ -3,7 +3,7 @@ package posts
 import (
 	"time"
 
-	"github.com/sivaprasadreddy/devzone-api-golang/users"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/users"
 )
 
 type Post struct {

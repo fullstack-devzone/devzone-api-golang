@@ -1,4 +1,4 @@
-package database
+package db
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jackc/pgx/v5"
 	log "github.com/sirupsen/logrus"
-	"github.com/sivaprasadreddy/devzone-api-golang/config"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/config"
 )
 
 func GetDb(config config.AppConfig) *pgx.Conn {

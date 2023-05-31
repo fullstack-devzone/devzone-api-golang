@@ -5,8 +5,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	log "github.com/sirupsen/logrus"
-
-	"github.com/sivaprasadreddy/devzone-api-golang/users"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/users"
 )
 
 type PostRepository struct {

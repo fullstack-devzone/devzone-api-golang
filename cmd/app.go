@@ -6,9 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5"
 	log "github.com/sirupsen/logrus"
-	"github.com/sivaprasadreddy/devzone-api-golang/config"
-	"github.com/sivaprasadreddy/devzone-api-golang/database"
-	"github.com/sivaprasadreddy/devzone-api-golang/posts"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/config"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/db"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/posts"
 )
 
 type App struct {
@@ -28,7 +28,7 @@ func (app *App) init(config config.AppConfig) {
 	//defer logFile.Close()
 	app.initLogging()
 
-	app.db = database.GetDb(config)
+	app.db = db.GetDb(config)
 
 	postsRepo := posts.NewPostRepo(app.db)
 	app.postController = posts.NewPostController(postsRepo)

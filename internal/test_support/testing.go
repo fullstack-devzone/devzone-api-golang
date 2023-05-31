@@ -12,7 +12,7 @@ import (
 
 func init() {
 	_, filename, _, _ := runtime.Caller(0)
-	dir := path.Join(path.Dir(filename), "..")
+	dir := path.Join(path.Dir(filename), "../..")
 	err := os.Chdir(dir)
 	if err != nil {
 		panic(err)
@@ -23,8 +23,8 @@ func InitPostgresContainer() *PostgresContainer {
 	ctx := context.Background()
 	pgContainer, err := SetupPostgres(ctx)
 	if err != nil {
-		log.Error("failed to setup Postgres container")
-		panic(err)
+		log.Fatalf("failed to setup Postgres container")
+		return nil
 	}
 	overrideEnv(pgContainer)
 	return pgContainer
