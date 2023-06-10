@@ -1,4 +1,4 @@
-package posts_test
+package api_test
 
 import (
 	"fmt"
@@ -9,14 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sivaprasadreddy/devzone-api-golang/cmd"
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/config"
-	test_support2 "github.com/sivaprasadreddy/devzone-api-golang/internal/test_support"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/test_support"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
 type PostApisTestSuite struct {
 	suite.Suite
-	PgContainer *test_support2.PostgresContainer
+	PgContainer *test_support.PostgresContainer
 	cfg         config.AppConfig
 	app         *cmd.App
 	router      *gin.Engine
@@ -24,7 +24,7 @@ type PostApisTestSuite struct {
 
 func (suite *PostApisTestSuite) SetupSuite() {
 	fmt.Println("-----------SetupSuite()-----------")
-	suite.PgContainer = test_support2.InitPostgresContainer()
+	suite.PgContainer = test_support.InitPostgresContainer()
 	suite.cfg = config.GetConfig(".env")
 	suite.app = cmd.NewApp(suite.cfg)
 	suite.router = suite.app.Router
@@ -42,6 +42,7 @@ func TestPostApisTestSuite(t *testing.T) {
 func (suite *PostApisTestSuite) TestGetAllPosts() {
 	t := suite.T()
 	req, _ := http.NewRequest("GET", "/api/posts", nil)
+	req.Header.Add("X-API-KEY", "1234")
 	rr := httptest.NewRecorder()
 	suite.router.ServeHTTP(rr, req)
 

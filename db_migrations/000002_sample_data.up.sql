@@ -5,9 +5,9 @@ INSERT INTO roles (id, name, created_at) VALUES
 ;
 
 INSERT INTO users (email, password, name, created_at) VALUES
-('admin@gmail.com', 'admin', 'Admin', CURRENT_TIMESTAMP),
-('demo@gmail.com', 'demo', 'Demo User', CURRENT_TIMESTAMP),
-('siva@gmail.com', 'siva', 'Siva', CURRENT_TIMESTAMP)
+('admin@gmail.com','$2a$14$rPRrJzfPp0P4jMVF7EI.yeWWL8hfVifKkt2BJQChgC7qDemh8A5Q2', 'Admin', CURRENT_TIMESTAMP),
+('demo@gmail.com', '$2a$14$HRg1m3oqH64qM7gfqBHlOumqDtOT9DED9TvRK2NDXfEqT3Grx8bv6', 'Demo User', CURRENT_TIMESTAMP),
+('siva@gmail.com', '$2a$14$Nx4oY3HsxMCl9O.nb4FvseO8xaf1Lx/f7WsJf2ziIYAVDYWbA/Cru', 'Siva', CURRENT_TIMESTAMP)
 ;
 
 INSERT INTO user_role (user_id, role_id) VALUES

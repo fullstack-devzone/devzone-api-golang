@@ -1,4 +1,4 @@
-package posts
+package api
 
 import (
 	"net/http"
@@ -7,13 +7,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/domain"
 )
 
 type PostController struct {
-	repository PostRepository
+	repository domain.PostRepository
 }
 
-func NewPostController(repository PostRepository) *PostController {
+func NewPostController(repository domain.PostRepository) *PostController {
 	return &PostController{repository}
 }
 
@@ -29,7 +30,7 @@ func (b PostController) GetAll(c *gin.Context) {
 		return
 	}
 	if posts == nil {
-		posts = []Post{}
+		posts = []domain.Post{}
 	}
 	c.JSON(http.StatusOK, posts)
 }
@@ -52,7 +53,7 @@ func (b PostController) GetById(c *gin.Context) {
 func (b PostController) Create(c *gin.Context) {
 	log.Info("create post")
 	ctx := c.Request.Context()
-	var createPost CreatePostModel
+	var createPost domain.CreatePostModel
 	if err := c.BindJSON(&createPost); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": "Unable to parse request body. Error: " + err.Error(),
@@ -67,9 +68,12 @@ func (b PostController) Create(c *gin.Context) {
 		})
 		return
 	}
-	post := Post{
+	userId := c.MustGet("CurrentUserId").(int)
+	post := domain.Post{
 		Title:       createPost.Title,
 		Url:         createPost.Url,
+		Content:     createPost.Content,
+		CreatedBy:   domain.User{Id: userId},
 		CreatedDate: time.Time{},
 	}
 	post, err = b.repository.CreatePost(ctx, post)
@@ -87,7 +91,7 @@ func (b PostController) Update(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	log.Infof("update post id=%d", id)
 	ctx := c.Request.Context()
-	var post Post
+	var post domain.Post
 	if err := c.BindJSON(&post); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": "Unable to parse request body. Error: " + err.Error(),

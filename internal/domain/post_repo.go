@@ -1,11 +1,10 @@
-package posts
+package domain
 
 import (
 	"context"
 
 	"github.com/jackc/pgx/v5"
 	log "github.com/sirupsen/logrus"
-	"github.com/sivaprasadreddy/devzone-api-golang/internal/users"
 )
 
 type PostRepository struct {
@@ -39,7 +38,7 @@ func (p PostRepository) GetPosts(ctx context.Context) ([]Post, error) {
 
 func (p PostRepository) GetPostById(ctx context.Context, postId int) (Post, error) {
 	log.Infof("Fetching post with id=%d", postId)
-	var post = Post{CreatedBy: users.User{}}
+	var post = Post{CreatedBy: User{}}
 	err := p.conn.QueryRow(ctx, `select id, title, url, content, created_by, created_at, updated_at FROM posts where id=$1`, postId).Scan(
 		&post.Id, &post.Title, &post.Url, &post.Content, &post.CreatedBy.Id, &post.CreatedDate, &post.UpdatedDate)
 	if err != nil {

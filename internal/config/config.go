@@ -19,6 +19,7 @@ type AppConfig struct {
 	DbDatabase           string
 	DbRunMigrations      bool
 	DbMigrationsLocation string
+	JwtSecret            string
 }
 
 func GetConfig(envFilePath string) AppConfig {
@@ -45,6 +46,7 @@ func GetConfig(envFilePath string) AppConfig {
 	DbDatabase := os.Getenv("APP_DB_NAME")
 	DbRunMigrations, _ := strconv.ParseBool(os.Getenv("APP_DB_RUN_MIGRATIONS"))
 	DbMigrationsLocation := os.Getenv("APP_DB_MIGRATIONS_LOCATION")
+	JwtSecret := os.Getenv("JWT_SECRET")
 	return AppConfig{
 		AppPort:              AppPort,
 		DbHost:               DbHost,
@@ -54,5 +56,6 @@ func GetConfig(envFilePath string) AppConfig {
 		DbDatabase:           DbDatabase,
 		DbRunMigrations:      DbRunMigrations,
 		DbMigrationsLocation: DbMigrationsLocation,
+		JwtSecret:            JwtSecret,
 	}
 }
