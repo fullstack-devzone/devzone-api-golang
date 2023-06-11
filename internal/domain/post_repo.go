@@ -36,13 +36,18 @@ func (p PostRepository) GetPosts(ctx context.Context) ([]Post, error) {
 	return posts, nil
 }
 
-func (p PostRepository) GetPostById(ctx context.Context, postId int) (Post, error) {
+func (p PostRepository) GetPostById(ctx context.Context, postId int) (PostModel, error) {
 	log.Infof("Fetching post with id=%d", postId)
-	var post = Post{CreatedBy: User{}}
-	err := p.conn.QueryRow(ctx, `select id, title, url, content, created_by, created_at, updated_at FROM posts where id=$1`, postId).Scan(
-		&post.Id, &post.Title, &post.Url, &post.Content, &post.CreatedBy.Id, &post.CreatedDate, &post.UpdatedDate)
+	var post = PostModel{}
+	query := `select p.id, p.title, p.url, p.content, p.created_at, p.updated_at,
+       				 u.id, u.name, u.email
+			  FROM posts p join users u on p.created_by = u.id
+			  WHERE p.id=$1`
+	err := p.conn.QueryRow(ctx, query, postId).Scan(
+		&post.Id, &post.Title, &post.Url, &post.Content, &post.CreatedDate, &post.UpdatedDate,
+		&post.CreatedBy.Id, &post.CreatedBy.Name, &post.CreatedBy.Email)
 	if err != nil {
-		return Post{}, err
+		return PostModel{}, err
 	}
 	return post, nil
 }
@@ -50,7 +55,7 @@ func (p PostRepository) GetPostById(ctx context.Context, postId int) (Post, erro
 func (p PostRepository) CreatePost(ctx context.Context, post Post) (Post, error) {
 	var lastInsertID int
 	err := p.conn.QueryRow(ctx, "insert into posts(title, url, content, created_by, created_at) values($1, $2, $3,$4, $5) RETURNING id",
-		post.Title, post.Url, post.Content, post.CreatedBy.Id, post.CreatedDate).Scan(&lastInsertID)
+		post.Title, post.Url, post.Content, post.CreatedBy, post.CreatedDate).Scan(&lastInsertID)
 	if err != nil {
 		log.Errorf("Error while inserting post row: %v", err)
 		return Post{}, err

@@ -1,4 +1,2 @@
 TRUNCATE TABLE posts;
-TRUNCATE TABLE user_role;
 TRUNCATE TABLE users;
-TRUNCATE TABLE roles;

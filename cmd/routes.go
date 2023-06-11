@@ -10,7 +10,12 @@ func SetupRoutes(app *App) *gin.Engine {
 	authMiddleware := middleware.AuthMiddleware(app.config)
 
 	authRouter := r.Group("/api")
-	authRouter.POST("/login", app.authController.SignInHandler)
+	authRouter.POST("/login", app.authController.Login)
+	authRouter.GET("/me", authMiddleware, app.authController.GetCurrentUser)
+
+	userRouter := r.Group("/api/users")
+	userRouter.POST("", app.userController.Create)
+	userRouter.GET("/:id", app.userController.GetById)
 
 	postsRouter := r.Group("/api/posts")
 	postsRouter.GET("", app.postController.GetAll)
