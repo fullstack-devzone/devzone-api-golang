@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sivaprasadreddy/devzone-api-golang/internal/auth"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/domain"
 )
 
 type LoginRequest struct {
@@ -38,7 +38,7 @@ func (a *AuthenticationController) Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
 		return
 	}
-	jwtOutput, err := auth.CreateJwtToken(a.cfg, *loginUser)
+	jwtOutput, err := domain.CreateJwtToken(a.cfg, *loginUser)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sivaprasadreddy/devzone-api-golang/cmd"
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/api/auth"
-	auth2 "github.com/sivaprasadreddy/devzone-api-golang/internal/auth"
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/config"
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/domain"
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/test_support"
@@ -85,7 +84,7 @@ func (suite *AuthControllerTestSuite) TestInvalidLogin() {
 
 func (suite *AuthControllerTestSuite) TestGetCurrentUser() {
 	t := suite.T()
-	token, err := auth2.CreateJwtToken(suite.cfg, domain.User{
+	token, err := domain.CreateJwtToken(suite.cfg, domain.User{
 		Id:    1,
 		Name:  "Admin",
 		Email: "admin@gmail.com",
