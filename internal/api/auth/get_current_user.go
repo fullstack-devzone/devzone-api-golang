@@ -4,11 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/config"
 )
 
 func (a AuthenticationController) GetCurrentUser(c *gin.Context) {
 	ctx := c.Request.Context()
-	userId := c.MustGet("CurrentUserId").(int)
+	userId := c.MustGet(config.AuthUserIdKey).(int)
 
 	loginUser, err := a.repository.GetUserById(ctx, userId)
 	if err != nil {

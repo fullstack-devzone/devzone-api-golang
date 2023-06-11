@@ -10,7 +10,7 @@ import (
 
 func (uc UserController) GetById(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	log.Infof("Fetching user by id %d", id)
+	log.Infof("Fetching user by id: %d", id)
 	ctx := c.Request.Context()
 	post, err := uc.repository.GetUserById(ctx, id)
 	if err != nil {

@@ -5,12 +5,13 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/domain"
 )
 
 type LoginRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `json:"username" binding:"required,email"`
+	Password string `json:"password" binding:"required"`
 }
 
 type LoginResponse struct {
@@ -30,11 +31,13 @@ func (a AuthenticationController) Login(c *gin.Context) {
 	ctx := c.Request.Context()
 	var user LoginRequest
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Errorf("Login payload binding error: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Username and password are required"})
 		return
 	}
 	loginUser, err := a.repository.Login(ctx, user.Username, user.Password)
 	if err != nil {
+		log.Errorf("Login error: %v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
 		return
 	}

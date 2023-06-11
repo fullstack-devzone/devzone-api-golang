@@ -5,45 +5,28 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	validation "github.com/go-ozzo/ozzo-validation"
-	"github.com/go-ozzo/ozzo-validation/is"
 	log "github.com/sirupsen/logrus"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/config"
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/domain"
 )
 
 type CreatePostModel struct {
-	Title   string `json:"title" validate:"required"`
-	Url     string `json:"url" validate:"required,url"`
-	Content string `json:"content" validate:"required"`
-}
-
-func (post CreatePostModel) Validate() error {
-	return validation.ValidateStruct(&post,
-		validation.Field(&post.Title, validation.Required),
-		validation.Field(&post.Url, validation.Required, is.URL),
-		validation.Field(&post.Content, validation.Required),
-	)
+	Title   string `json:"title" binding:"required"`
+	Url     string `json:"url" binding:"required,url"`
+	Content string `json:"content" binding:"required"`
 }
 
 func (pc PostController) Create(c *gin.Context) {
 	log.Info("create post")
 	ctx := c.Request.Context()
 	var createPost CreatePostModel
-	if err := c.BindJSON(&createPost); err != nil {
+	if err := c.ShouldBindJSON(&createPost); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": "Unable to parse request body. Error: " + err.Error(),
 		})
 		return
 	}
-	err := createPost.Validate()
-	if err != nil {
-		log.Errorf("Error while create post %v", err)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"error": "Unable to create post",
-		})
-		return
-	}
-	userId := c.MustGet("CurrentUserId").(int)
+	userId := c.MustGet(config.AuthUserIdKey).(int)
 	now := time.Now()
 	post := domain.Post{
 		Title:       createPost.Title,
@@ -52,7 +35,7 @@ func (pc PostController) Create(c *gin.Context) {
 		CreatedBy:   userId,
 		CreatedDate: &now,
 	}
-	post, err = pc.repository.CreatePost(ctx, post)
+	post, err := pc.repository.CreatePost(ctx, post)
 	if err != nil {
 		log.Errorf("Error while create post %v", err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{

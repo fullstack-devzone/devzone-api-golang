@@ -6,24 +6,14 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	validation "github.com/go-ozzo/ozzo-validation"
-	"github.com/go-ozzo/ozzo-validation/is"
 	log "github.com/sirupsen/logrus"
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/domain"
 )
 
 type UpdatePostModel struct {
-	Title   string `json:"title"`
-	Url     string `json:"url"`
-	Content string `json:"content"`
-}
-
-func (post UpdatePostModel) Validate() error {
-	return validation.ValidateStruct(&post,
-		validation.Field(&post.Title, validation.Required),
-		validation.Field(&post.Url, validation.Required, is.URL),
-		validation.Field(&post.Content, validation.Required),
-	)
+	Title   string `json:"title" binding:"required"`
+	Url     string `json:"url" binding:"required,url"`
+	Content string `json:"content" binding:"required"`
 }
 
 func (pc PostController) Update(c *gin.Context) {
@@ -31,17 +21,10 @@ func (pc PostController) Update(c *gin.Context) {
 	log.Infof("update post id=%d", id)
 	ctx := c.Request.Context()
 	var updatePost UpdatePostModel
-	if err := c.BindJSON(&updatePost); err != nil {
+	if err := c.ShouldBindJSON(&updatePost); err != nil {
+		log.Errorf("Invalid request payload. Error: %v", err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": "Unable to parse request body. Error: " + err.Error(),
-		})
-		return
-	}
-	err := updatePost.Validate()
-	if err != nil {
-		log.Errorf("Error while update post %v", err)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"error": "Unable to update post",
+			"error": "Invalid request payload",
 		})
 		return
 	}
@@ -53,11 +36,11 @@ func (pc PostController) Update(c *gin.Context) {
 		Content:     updatePost.Content,
 		UpdatedDate: &now,
 	}
-	post, err = pc.repository.UpdatePost(ctx, post)
+	post, err := pc.repository.UpdatePost(ctx, post)
 	if err != nil {
-		log.Errorf("Error while update post")
+		log.Errorf("Failed to update post. Error: %v", err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": "Unable to update post",
+			"error": "Failed to update post",
 		})
 		return
 	}

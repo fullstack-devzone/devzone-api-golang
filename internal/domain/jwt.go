@@ -3,14 +3,14 @@ package domain
 import (
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/config"
 )
 
 type Claims struct {
+	jwt.RegisteredClaims
 	UserId   int    `json:"userId"`
 	Username string `json:"username"`
-	jwt.StandardClaims
 }
 type JWTOutput struct {
 	Token   string    `json:"token"`
@@ -18,12 +18,12 @@ type JWTOutput struct {
 }
 
 func CreateJwtToken(cfg config.AppConfig, user User) (JWTOutput, error) {
-	expirationTime := time.Now().Add(10 * time.Minute)
-	claims := &Claims{
+	expirationTime := time.Now().Add(2 * time.Hour)
+	claims := Claims{
 		UserId:   user.Id,
 		Username: user.Email,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

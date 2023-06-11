@@ -14,9 +14,9 @@ func (pc PostController) Delete(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := pc.repository.DeletePost(ctx, id)
 	if err != nil {
-		log.Errorf("Error while deleting post")
+		log.Errorf("Failed to delete post. Error: %v", err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"error": "Unable to delete post",
+			"error": "Failed to delete post",
 		})
 		return
 	}

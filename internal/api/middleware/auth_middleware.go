@@ -3,8 +3,8 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/config"
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/domain"
 )
@@ -23,7 +23,7 @@ func AuthMiddleware(cfg config.AppConfig) gin.HandlerFunc {
 		if tkn == nil || !tkn.Valid {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
-		c.Set("CurrentUserId", claims.UserId)
+		c.Set(config.AuthUserIdKey, claims.UserId)
 		c.Next()
 	}
 }
