@@ -8,10 +8,10 @@ import (
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/domain"
 )
 
-func (b PostController) GetAll(c *gin.Context) {
+func (pc PostController) GetAll(c *gin.Context) {
 	log.Info("Fetching all posts")
 	ctx := c.Request.Context()
-	posts, err := b.repository.GetPosts(ctx)
+	posts, err := pc.repository.GetPosts(ctx)
 	if err != nil {
 		log.Errorf("Error while fetching posts")
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{

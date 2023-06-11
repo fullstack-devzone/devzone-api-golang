@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/sivaprasadreddy/devzone-api-golang/internal/middleware"
+	"github.com/sivaprasadreddy/devzone-api-golang/internal/api/middleware"
 )
 
 func SetupRoutes(app *App) *gin.Engine {

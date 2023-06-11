@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (a *AuthenticationController) GetCurrentUser(c *gin.Context) {
+func (a AuthenticationController) GetCurrentUser(c *gin.Context) {
 	ctx := c.Request.Context()
 	userId := c.MustGet("CurrentUserId").(int)
 

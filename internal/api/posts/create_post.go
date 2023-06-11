@@ -17,15 +17,15 @@ type CreatePostModel struct {
 	Content string `json:"content" validate:"required"`
 }
 
-func (l CreatePostModel) Validate() error {
-	return validation.ValidateStruct(&l,
-		validation.Field(&l.Title, validation.Required),
-		validation.Field(&l.Url, validation.Required, is.URL),
-		validation.Field(&l.Content, validation.Required),
+func (post CreatePostModel) Validate() error {
+	return validation.ValidateStruct(&post,
+		validation.Field(&post.Title, validation.Required),
+		validation.Field(&post.Url, validation.Required, is.URL),
+		validation.Field(&post.Content, validation.Required),
 	)
 }
 
-func (b PostController) Create(c *gin.Context) {
+func (pc PostController) Create(c *gin.Context) {
 	log.Info("create post")
 	ctx := c.Request.Context()
 	var createPost CreatePostModel
@@ -52,7 +52,7 @@ func (b PostController) Create(c *gin.Context) {
 		CreatedBy:   userId,
 		CreatedDate: &now,
 	}
-	post, err = b.repository.CreatePost(ctx, post)
+	post, err = pc.repository.CreatePost(ctx, post)
 	if err != nil {
 		log.Errorf("Error while create post %v", err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{

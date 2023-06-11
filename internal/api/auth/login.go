@@ -26,7 +26,7 @@ type LoginUser struct {
 	Role  string `json:"role"`
 }
 
-func (a *AuthenticationController) Login(c *gin.Context) {
+func (a AuthenticationController) Login(c *gin.Context) {
 	ctx := c.Request.Context()
 	var user LoginRequest
 	if err := c.ShouldBindJSON(&user); err != nil {

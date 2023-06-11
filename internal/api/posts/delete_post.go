@@ -8,11 +8,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (b PostController) Delete(c *gin.Context) {
+func (pc PostController) Delete(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	log.Infof("delete post with id=%d", id)
 	ctx := c.Request.Context()
-	err := b.repository.DeletePost(ctx, id)
+	err := pc.repository.DeletePost(ctx, id)
 	if err != nil {
 		log.Errorf("Error while deleting post")
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{

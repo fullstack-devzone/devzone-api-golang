@@ -18,15 +18,15 @@ type UpdatePostModel struct {
 	Content string `json:"content"`
 }
 
-func (l UpdatePostModel) Validate() error {
-	return validation.ValidateStruct(&l,
-		validation.Field(&l.Title, validation.Required),
-		validation.Field(&l.Url, validation.Required, is.URL),
-		validation.Field(&l.Content, validation.Required),
+func (post UpdatePostModel) Validate() error {
+	return validation.ValidateStruct(&post,
+		validation.Field(&post.Title, validation.Required),
+		validation.Field(&post.Url, validation.Required, is.URL),
+		validation.Field(&post.Content, validation.Required),
 	)
 }
 
-func (b PostController) Update(c *gin.Context) {
+func (pc PostController) Update(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	log.Infof("update post id=%d", id)
 	ctx := c.Request.Context()
@@ -53,7 +53,7 @@ func (b PostController) Update(c *gin.Context) {
 		Content:     updatePost.Content,
 		UpdatedDate: &now,
 	}
-	post, err = b.repository.UpdatePost(ctx, post)
+	post, err = pc.repository.UpdatePost(ctx, post)
 	if err != nil {
 		log.Errorf("Error while update post")
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -61,6 +61,6 @@ func (b PostController) Update(c *gin.Context) {
 		})
 		return
 	}
-	postModel, _ := b.repository.GetPostById(c.Request.Context(), id)
+	postModel, _ := pc.repository.GetPostById(c.Request.Context(), id)
 	c.JSON(http.StatusOK, postModel)
 }

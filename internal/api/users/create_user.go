@@ -17,15 +17,15 @@ type CreateUserModel struct {
 	Password string `json:"password" validate:"required"`
 }
 
-func (l CreateUserModel) Validate() error {
-	return validation.ValidateStruct(&l,
-		validation.Field(&l.Name, validation.Required),
-		validation.Field(&l.Email, validation.Required, is.Email),
-		validation.Field(&l.Password, validation.Required),
+func (user CreateUserModel) Validate() error {
+	return validation.ValidateStruct(&user,
+		validation.Field(&user.Name, validation.Required),
+		validation.Field(&user.Email, validation.Required, is.Email),
+		validation.Field(&user.Password, validation.Required),
 	)
 }
 
-func (b UserController) Create(c *gin.Context) {
+func (uc UserController) Create(c *gin.Context) {
 	log.Info("create user")
 	ctx := c.Request.Context()
 	var createUser CreateUserModel
@@ -51,7 +51,7 @@ func (b UserController) Create(c *gin.Context) {
 		Role:        "ROLE_USER",
 		CreatedDate: &now,
 	}
-	user, err = b.repository.CreateUser(ctx, user)
+	user, err = uc.repository.CreateUser(ctx, user)
 	if err != nil {
 		log.Errorf("Error while create user %v", err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{

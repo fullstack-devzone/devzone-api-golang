@@ -8,11 +8,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (b UserController) GetById(c *gin.Context) {
+func (uc UserController) GetById(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	log.Infof("Fetching user by id %d", id)
 	ctx := c.Request.Context()
-	post, err := b.repository.GetUserById(ctx, id)
+	post, err := uc.repository.GetUserById(ctx, id)
 	if err != nil {
 		log.Errorf("Error while fetching user by id: %v", err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{

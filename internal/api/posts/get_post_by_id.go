@@ -9,11 +9,11 @@ import (
 	"github.com/sivaprasadreddy/devzone-api-golang/internal/domain"
 )
 
-func (b PostController) GetById(c *gin.Context) {
+func (pc PostController) GetById(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	log.Infof("Fetching post by id %d", id)
 	ctx := c.Request.Context()
-	post, err := b.repository.GetPostById(ctx, id)
+	post, err := pc.repository.GetPostById(ctx, id)
 	if err != nil {
 		log.Errorf("Error while fetching post by id: %v", err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
