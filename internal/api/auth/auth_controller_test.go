@@ -92,7 +92,7 @@ func (suite *AuthControllerTestSuite) TestGetCurrentUser() {
 	assert.Nil(t, err)
 
 	req, _ := http.NewRequest(http.MethodGet, "/api/me", nil)
-	req.Header.Add("Authorization", token.Token)
+	req.Header.Add("Authorization", "Bearer "+token.Token)
 	rr := httptest.NewRecorder()
 	suite.router.ServeHTTP(rr, req)
 

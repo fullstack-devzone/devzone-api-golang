@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -11,7 +12,12 @@ import (
 
 func AuthMiddleware(cfg config.AppConfig) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenValue := c.GetHeader("Authorization")
+		authHeaderValue := c.GetHeader("Authorization")
+		if authHeaderValue == "" || !strings.HasPrefix(authHeaderValue, "Bearer ") {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+		tokenValue := authHeaderValue[len("Bearer "):]
 		claims := &domain.Claims{}
 		tkn, err := jwt.ParseWithClaims(tokenValue, claims,
 			func(token *jwt.Token) (interface{}, error) {
@@ -19,9 +25,11 @@ func AuthMiddleware(cfg config.AppConfig) gin.HandlerFunc {
 			})
 		if err != nil {
 			c.AbortWithStatus(http.StatusUnauthorized)
+			return
 		}
 		if tkn == nil || !tkn.Valid {
 			c.AbortWithStatus(http.StatusUnauthorized)
+			return
 		}
 		c.Set(config.AuthUserIdKey, claims.UserId)
 		c.Next()

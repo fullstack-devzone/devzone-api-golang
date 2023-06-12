@@ -39,7 +39,7 @@ func TestPostControllerTestSuite(t *testing.T) {
 	suite.Run(t, new(PostControllerTestSuite))
 }
 
-func (suite *PostControllerTestSuite) TestGetAllPosts() {
+func (suite *PostControllerTestSuite) TestGetPosts() {
 	t := suite.T()
 	req, _ := http.NewRequest(http.MethodGet, "/api/posts", nil)
 	rr := httptest.NewRecorder()
@@ -47,9 +47,40 @@ func (suite *PostControllerTestSuite) TestGetAllPosts() {
 
 	assert.Equal(t, http.StatusOK, rr.Code)
 
-	actualResponse := rr.Body.String()
-	assert.NotEqual(t, "[]", actualResponse,
-		"Expected an non-empty array. Got %s", actualResponse)
+	actualResponse := rr.Body
+	var postsResponse domain.PostsPageModel
+	err := json.NewDecoder(actualResponse).Decode(&postsResponse)
+	assert.Nil(t, err)
+
+	assert.Equal(t, 6, postsResponse.TotalElements)
+	assert.Equal(t, 1, postsResponse.PageNumber)
+	assert.Equal(t, 1, postsResponse.TotalPages)
+	assert.Equal(t, false, postsResponse.HasNext)
+	assert.Equal(t, false, postsResponse.HasPrevious)
+	assert.Equal(t, true, postsResponse.IsFirst)
+	assert.Equal(t, true, postsResponse.IsLast)
+}
+
+func (suite *PostControllerTestSuite) TestSearchPosts() {
+	t := suite.T()
+	req, _ := http.NewRequest(http.MethodGet, "/api/posts?query=Java", nil)
+	rr := httptest.NewRecorder()
+	suite.router.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusOK, rr.Code)
+
+	actualResponse := rr.Body
+	var postsResponse domain.PostsPageModel
+	err := json.NewDecoder(actualResponse).Decode(&postsResponse)
+	assert.Nil(t, err)
+
+	assert.Equal(t, 2, postsResponse.TotalElements)
+	assert.Equal(t, 1, postsResponse.PageNumber)
+	assert.Equal(t, 1, postsResponse.TotalPages)
+	assert.Equal(t, false, postsResponse.HasNext)
+	assert.Equal(t, false, postsResponse.HasPrevious)
+	assert.Equal(t, true, postsResponse.IsFirst)
+	assert.Equal(t, true, postsResponse.IsLast)
 }
 
 func (suite *PostControllerTestSuite) TestGetPostById() {
@@ -91,7 +122,7 @@ func (suite *PostControllerTestSuite) TestCreatePost() {
 	assert.Nil(t, err)
 
 	req, _ := http.NewRequest(http.MethodPost, "/api/posts", reqBody)
-	req.Header.Add("Authorization", token.Token)
+	req.Header.Add("Authorization", "Bearer "+token.Token)
 	rr := httptest.NewRecorder()
 	suite.router.ServeHTTP(rr, req)
 
@@ -125,7 +156,7 @@ func (suite *PostControllerTestSuite) TestUpdatePost() {
 	assert.Nil(t, err)
 
 	req, _ := http.NewRequest(http.MethodPut, "/api/posts/1", reqBody)
-	req.Header.Add("Authorization", token.Token)
+	req.Header.Add("Authorization", "Bearer "+token.Token)
 	rr := httptest.NewRecorder()
 	suite.router.ServeHTTP(rr, req)
 
@@ -152,7 +183,7 @@ func (suite *PostControllerTestSuite) TestDeletePost() {
 	assert.Nil(t, err)
 
 	req, _ := http.NewRequest(http.MethodDelete, "/api/posts/2", nil)
-	req.Header.Add("Authorization", token.Token)
+	req.Header.Add("Authorization", "Bearer "+token.Token)
 	rr := httptest.NewRecorder()
 	suite.router.ServeHTTP(rr, req)
 

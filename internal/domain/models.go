@@ -19,3 +19,14 @@ type PostModel struct {
 	CreatedDate *time.Time         `json:"created_date"`
 	UpdatedDate *time.Time         `json:"updated_date"`
 }
+
+type PostsPageModel struct {
+	TotalElements int         `json:"totalElements"`
+	TotalPages    int         `json:"totalPages"`
+	PageNumber    int         `json:"pageNumber"`
+	IsFirst       bool        `json:"isFirst"`
+	IsLast        bool        `json:"isLast"`
+	HasNext       bool        `json:"hasNext"`
+	HasPrevious   bool        `json:"hasPrevious"`
+	Data          []PostModel `json:"data"`
+}

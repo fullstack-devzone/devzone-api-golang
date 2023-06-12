@@ -2,6 +2,9 @@ package domain
 
 import (
 	"context"
+	"fmt"
+	"math"
+	"strings"
 
 	"github.com/jackc/pgx/v5"
 	log "github.com/sirupsen/logrus"
@@ -17,23 +20,70 @@ func NewPostRepo(conn *pgx.Conn) PostRepository {
 	}
 }
 
-func (p PostRepository) GetPosts(ctx context.Context) ([]Post, error) {
-	rows, err := p.conn.Query(ctx, `SELECT id, title, url, content, created_at FROM posts`)
-	if err != nil {
-		return nil, err
-	}
-	var posts []Post
+const pageSize = 10
 
+func (p PostRepository) GetPosts(ctx context.Context, page int) (PostsPageModel, error) {
+	var totalElements = 0
+	err := p.conn.QueryRow(ctx, `SELECT count(*) FROM posts`).Scan(&totalElements)
+	if err != nil {
+		return PostsPageModel{}, err
+	}
+	offset := (page - 1) * pageSize
+	rows, err := p.conn.Query(ctx,
+		`select p.id, p.title, p.url, p.content, p.created_at, p.updated_at,
+       				u.id, u.name, u.email
+			FROM posts p join users u on p.created_by = u.id
+			order by created_at desc OFFSET $1 LIMIT $2`, offset, pageSize)
+	if err != nil {
+		return PostsPageModel{}, err
+	}
 	defer rows.Close()
+	return buildPagedResult(rows, totalElements, page)
+}
+
+func (p PostRepository) SearchPosts(ctx context.Context, keyword string, page int) (PostsPageModel, error) {
+	var totalElements = 0
+	keyword = fmt.Sprintf("%%%s%%", strings.ToLower(keyword))
+	err := p.conn.QueryRow(ctx, `SELECT count(*) FROM posts WHERE lower(title) like $1`, keyword).Scan(&totalElements)
+	if err != nil {
+		return PostsPageModel{}, err
+	}
+	offset := (page - 1) * pageSize
+	rows, err := p.conn.Query(ctx,
+		`select p.id, p.title, p.url, p.content, p.created_at, p.updated_at,
+       				u.id, u.name, u.email
+			FROM posts p join users u on p.created_by = u.id
+			WHERE lower(p.title) like $1
+			order by created_at desc OFFSET $2 LIMIT $3`, keyword, offset, pageSize)
+	if err != nil {
+		return PostsPageModel{}, err
+	}
+	defer rows.Close()
+	return buildPagedResult(rows, totalElements, page)
+}
+
+func buildPagedResult(rows pgx.Rows, totalElements, page int) (PostsPageModel, error) {
+	var posts []PostModel
 	for rows.Next() {
-		var post = Post{}
-		err = rows.Scan(&post.Id, &post.Title, &post.Url, &post.Content, &post.CreatedDate)
+		var post = PostModel{}
+		err := rows.Scan(&post.Id, &post.Title, &post.Url, &post.Content, &post.CreatedDate, &post.UpdatedDate,
+			&post.CreatedBy.Id, &post.CreatedBy.Name, &post.CreatedBy.Email)
 		if err != nil {
-			return nil, err
+			return PostsPageModel{}, err
 		}
 		posts = append(posts, post)
 	}
-	return posts, nil
+	totalPages := int(math.Ceil(float64(totalElements) / float64(pageSize)))
+	return PostsPageModel{
+		TotalElements: totalElements,
+		TotalPages:    totalPages,
+		PageNumber:    page,
+		IsFirst:       page == 1,
+		IsLast:        page == totalPages,
+		HasNext:       totalPages > page,
+		HasPrevious:   page > 1,
+		Data:          posts,
+	}, nil
 }
 
 func (p PostRepository) GetPostById(ctx context.Context, postId int) (PostModel, error) {
