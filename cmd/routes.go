@@ -8,7 +8,11 @@ import (
 
 func SetupRoutes(app *App) *gin.Engine {
 	router := gin.Default()
-	router.Use(cors.Default())
+
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AddAllowHeaders("Authorization")
+	router.Use(cors.New(corsConfig))
 
 	authMiddleware := middleware.AuthMiddleware(app.config)
 

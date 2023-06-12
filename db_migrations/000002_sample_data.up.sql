@@ -10,5 +10,11 @@ insert into posts(id, url, title, content, created_by, created_at) values
 (3, 'https://blog.jooq.org/2014/06/25/flyway-and-jooq-for-unbeatable-sql-development-productivity/','Flyway and jOOQ for Unbeatable SQL Development Productivity','Flyway and jOOQ for Unbeatable SQL Development Productivity',1,CURRENT_TIMESTAMP),
 (4, 'https://www.marcobehler.com/guides/java-microservices-a-practical-guide','Java Microservices: A Practical Guide','Java Microservices: A Practical Guide',1,CURRENT_TIMESTAMP),
 (5, 'https://sivalabs.in/2020/02/spring-boot-integration-testing-using-testcontainers-starter/','SpringBoot Integration Testing using TestContainers Starter','SpringBoot Integration Testing using TestContainers Starter',1,CURRENT_TIMESTAMP),
-(6, 'https://medium.com/faun/continuous-integration-of-java-project-with-github-actions-7a8a0e8246ef','Continuous Integration of Java project with GitHub Actions','Continuous Integration of Java project with GitHub Actions',1,CURRENT_TIMESTAMP)
+(6, 'https://medium.com/faun/continuous-integration-of-java-project-with-github-actions-7a8a0e8246ef','Continuous Integration of Java project with GitHub Actions','Continuous Integration of Java project with GitHub Actions',1,CURRENT_TIMESTAMP),
+(7, 'https://www.sivalabs.in/spring-boot-3-error-reporting-using-problem-details','Spring Boot 3 : Error Responses using Problem Details for HTTP APIs','Spring Boot 3 : Error Responses using Problem Details for HTTP APIs',1,CURRENT_TIMESTAMP),
+(8, 'https://www.sivalabs.in/using-java-records-with-spring-boot-3','Using Java Records with Spring Boot 3','Using Java Records with Spring Boot 3',1,CURRENT_TIMESTAMP),
+(9, 'https://www.sivalabs.in/how-to-not-to-ask-for-technical-help','How (not) to ask for Technical Help?','How (not) to ask for Technical Help?',1,CURRENT_TIMESTAMP),
+(10, 'https://www.sivalabs.in/how-springboot-autoconfiguration-magic','How SpringBoot AutoConfiguration magic works?','How SpringBoot AutoConfiguration magic works?',1,CURRENT_TIMESTAMP),
+(11, 'https://www.sivalabs.in/why-springboot','Why SpringBoot?','Why SpringBoot?',1,CURRENT_TIMESTAMP),
+(12, 'https://www.sivalabs.in/2013/12/clean-code-dont-mix-different-levels-of-abstractions','Clean Code: Don’t mix different levels of abstractions','Clean Code: Don’t mix different levels of abstractions',1,CURRENT_TIMESTAMP)
 ;
