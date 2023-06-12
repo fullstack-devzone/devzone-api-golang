@@ -50,14 +50,13 @@ func (suite *UserControllerTestSuite) TestCreateUser() {
 	`)
 
 	req, _ := http.NewRequest(http.MethodPost, "/api/users", reqBody)
-	rr := httptest.NewRecorder()
-	suite.router.ServeHTTP(rr, req)
+	w := httptest.NewRecorder()
+	suite.router.ServeHTTP(w, req)
 
-	assert.Equal(t, http.StatusCreated, rr.Code)
+	assert.Equal(t, http.StatusCreated, w.Code)
 
-	actualResponse := rr.Body
 	var userResponse domain.User
-	err := json.NewDecoder(actualResponse).Decode(&userResponse)
+	err := json.NewDecoder(w.Body).Decode(&userResponse)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, userResponse.Id)
@@ -69,14 +68,13 @@ func (suite *UserControllerTestSuite) TestCreateUser() {
 func (suite *UserControllerTestSuite) TestGetUserById() {
 	t := suite.T()
 	req, _ := http.NewRequest(http.MethodGet, "/api/users/1", nil)
-	rr := httptest.NewRecorder()
-	suite.router.ServeHTTP(rr, req)
+	w := httptest.NewRecorder()
+	suite.router.ServeHTTP(w, req)
 
-	assert.Equal(t, http.StatusOK, rr.Code)
+	assert.Equal(t, http.StatusOK, w.Code)
 
-	actualResponse := rr.Body
 	var userResponse domain.User
-	err := json.NewDecoder(actualResponse).Decode(&userResponse)
+	err := json.NewDecoder(w.Body).Decode(&userResponse)
 
 	assert.Nil(t, err)
 	assert.Equal(t, 1, userResponse.Id)

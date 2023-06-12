@@ -49,14 +49,13 @@ func (suite *AuthControllerTestSuite) TestValidLogin() {
 		}
 	`)
 	req, _ := http.NewRequest(http.MethodPost, "/api/login", reqBody)
-	rr := httptest.NewRecorder()
-	suite.router.ServeHTTP(rr, req)
+	w := httptest.NewRecorder()
+	suite.router.ServeHTTP(w, req)
 
-	assert.Equal(t, http.StatusOK, rr.Code)
+	assert.Equal(t, http.StatusOK, w.Code)
 
-	actualResponse := rr.Body
 	var loginResponse auth.LoginResponse
-	err := json.NewDecoder(actualResponse).Decode(&loginResponse)
+	err := json.NewDecoder(w.Body).Decode(&loginResponse)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, loginResponse.AccessToken)
@@ -76,10 +75,10 @@ func (suite *AuthControllerTestSuite) TestInvalidLogin() {
 		}
 	`)
 	req, _ := http.NewRequest(http.MethodPost, "/api/login", reqBody)
-	rr := httptest.NewRecorder()
-	suite.router.ServeHTTP(rr, req)
+	w := httptest.NewRecorder()
+	suite.router.ServeHTTP(w, req)
 
-	assert.Equal(t, http.StatusUnauthorized, rr.Code)
+	assert.Equal(t, http.StatusUnauthorized, w.Code)
 }
 
 func (suite *AuthControllerTestSuite) TestGetCurrentUser() {
@@ -93,14 +92,13 @@ func (suite *AuthControllerTestSuite) TestGetCurrentUser() {
 
 	req, _ := http.NewRequest(http.MethodGet, "/api/me", nil)
 	req.Header.Add("Authorization", "Bearer "+token.Token)
-	rr := httptest.NewRecorder()
-	suite.router.ServeHTTP(rr, req)
+	w := httptest.NewRecorder()
+	suite.router.ServeHTTP(w, req)
 
-	assert.Equal(t, http.StatusOK, rr.Code)
+	assert.Equal(t, http.StatusOK, w.Code)
 
-	actualResponse := rr.Body
 	var userResponse auth.LoginUser
-	err = json.NewDecoder(actualResponse).Decode(&userResponse)
+	err = json.NewDecoder(w.Body).Decode(&userResponse)
 
 	assert.Nil(t, err)
 	assert.Equal(t, 1, userResponse.Id)

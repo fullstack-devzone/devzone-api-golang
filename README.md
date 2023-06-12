@@ -11,4 +11,8 @@ $ air
 
 # Run tests
 $ go test -v ./...
+
+# Check coverage
+$ GIN_MODE=release go test -v -coverprofile=coverage.out ./...
+$ go tool cover -html=coverage.out
 ```

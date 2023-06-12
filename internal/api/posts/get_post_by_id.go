@@ -6,7 +6,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
-	"github.com/sivaprasadreddy/devzone-api-golang/internal/domain"
 )
 
 func (pc PostController) GetById(c *gin.Context) {
@@ -21,17 +20,5 @@ func (pc PostController) GetById(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, domain.PostModel{
-		Id:      post.Id,
-		Title:   post.Title,
-		Url:     post.Url,
-		Content: post.Content,
-		CreatedBy: domain.PostCreatedByModel{
-			Id:    post.CreatedBy.Id,
-			Name:  post.CreatedBy.Name,
-			Email: post.CreatedBy.Email,
-		},
-		CreatedDate: post.CreatedDate,
-		UpdatedDate: post.UpdatedDate,
-	})
+	c.JSON(http.StatusOK, post)
 }
