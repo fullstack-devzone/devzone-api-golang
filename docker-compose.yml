@@ -1,4 +1,3 @@
-version: '3.8'
 services:
 
   devzone-db:
@@ -20,7 +19,7 @@ services:
   devzone-api-golang:
     build: .
     ports:
-      - "18080:8080"
+      - "8080:8080"
     restart: unless-stopped
     depends_on:
       - devzone-db
