@@ -50,13 +50,13 @@ func (p UserRepository) CreateUser(ctx context.Context, user User) (User, error)
 	return user, nil
 }
 
-func (p UserRepository) GetUserById(ctx context.Context, userId int) (User, error) {
+func (p UserRepository) GetUserById(ctx context.Context, userId int) (UserModel, error) {
 	log.Infof("Fetching user with id=%d", userId)
-	var user = User{}
-	err := p.conn.QueryRow(ctx, `select id, name, email, password, role, created_at, updated_at FROM users where id=$1`, userId).Scan(
-		&user.Id, &user.Name, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
+	var user = UserModel{}
+	err := p.conn.QueryRow(ctx, `select id, name, email, role FROM users where id=$1`, userId).Scan(
+		&user.Id, &user.Name, &user.Email, &user.Role)
 	if err != nil {
-		return User{}, err
+		return UserModel{}, err
 	}
 	return user, nil
 }

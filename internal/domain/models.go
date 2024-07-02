@@ -4,6 +4,13 @@ import (
 	"time"
 )
 
+type UserModel struct {
+	Id    int    `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+	Role  string `json:"role"`
+}
+
 type PostCreatedByModel struct {
 	Id    int    `json:"id"`
 	Name  string `json:"name"`
@@ -15,9 +22,9 @@ type PostModel struct {
 	Title       string             `json:"title"`
 	Url         string             `json:"url"`
 	Content     string             `json:"content"`
-	CreatedBy   PostCreatedByModel `json:"created_by"`
-	CreatedDate *time.Time         `json:"created_date"`
-	UpdatedDate *time.Time         `json:"updated_date"`
+	CreatedBy   PostCreatedByModel `json:"createdBy"`
+	CreatedDate *time.Time         `json:"createdAt"`
+	UpdatedDate *time.Time         `json:"updatedAt"`
 }
 
 type PostsPageModel struct {

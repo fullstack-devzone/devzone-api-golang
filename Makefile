@@ -31,6 +31,9 @@ fmt:    ## format the go source files
 lint: # https://staticcheck.io/
 	staticcheck ./...
 
+dbup:
+	docker-compose up -d devzone-db
+
 dcup:
 	docker-compose up --build
 

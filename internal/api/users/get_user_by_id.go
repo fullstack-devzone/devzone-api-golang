@@ -12,7 +12,7 @@ func (uc UserController) GetById(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	log.Infof("Fetching user by id: %d", id)
 	ctx := c.Request.Context()
-	post, err := uc.repository.GetUserById(ctx, id)
+	user, err := uc.repository.GetUserById(ctx, id)
 	if err != nil {
 		log.Errorf("Error while fetching user by id: %v", err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -20,5 +20,5 @@ func (uc UserController) GetById(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, post)
+	c.JSON(http.StatusOK, user)
 }
